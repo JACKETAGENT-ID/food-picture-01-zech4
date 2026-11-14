@@ -117,6 +117,9 @@ def run():
         dest_dir.mkdir(parents=True, exist_ok=True)
         dest = dest_dir / "entry.png"
         dest.write_bytes(blob)
+        if dest.stat().st_size != report["bytes"]:
+            complain("output size drifted from the source image")
+            return 1
         check = dest.read_bytes()
     except OSError as problem:
         complain("could not write the output: %s" % problem)
